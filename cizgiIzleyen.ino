@@ -1,37 +1,69 @@
-// Pin tanımlamaları
-const int solSensorPin = A0; // Sol sensör pin
-const int sagSensorPin = A1; // Sağ sensör pin
-
-// Eşik değerleri (sensörün gördüğü siyah çizgiyi beyaz zeminden ayırt etmek için)
-const int esikDegeriSol = 3500;
-const int esikDegeriSag = 3500;
+const int pinler[] = {D4, D5, D6, D7};
+const int esikDegerOrta = 3500;
+const int esikDegerSag = 3500;
+const int esikDegerSol = 3500;
 
 void setup() {
-  // Pin modları ayarlanıyor
-  pinMode(solSensorPin, INPUT);
-  pinMode(sagSensorPin, INPUT);
-  Serial.begin(115200); // Seri haberleşme başlatılıyor (Sensör değerlerini izlemek için)
+  Serial.begin(115200);
+  for (int i = 0; i < 4; i++) {
+    pinMode(pinler[i], OUTPUT);
+  }
+  pinMode(A0, INPUT);
+  pinMode(A1, INPUT);
+  pinMode(A2, INPUT);
 }
 
 void loop() {
-  // Sol ve sağ sensörlerin okuma değerleri alınıyor
-  int solOkuma = analogRead(solSensorPin);
-  int sagOkuma = analogRead(sagSensorPin);
+  int ortaOkuma = analogRead(A0);
+  int solOkuma = analogRead(A1);
+  int sagOkuma = analogRead(A2);
 
-  // Sol sensör değeri eşik değerinden küçükse, çizgiyi algıladı
-  if (solOkuma > esikDegeriSol) {
-    Serial.println("Sol sensör çizgiyi algıladı!");
+  if (ortaOkuma > esikDegerOrta && sagOkuma > esikDegerSag && solOkuma > esikDegerSol) {
+    ileri();
+  } else if (ortaOkuma <= esikDegerOrta && sagOkuma > esikDegerSag && solOkuma <= esikDegerSol) {
+    dur();
+  } else if (ortaOkuma <= esikDegerOrta && sagOkuma <= esikDegerSag && solOkuma > esikDegerSol) {
+    sag();
+  } else if (ortaOkuma > esikDegerOrta && sagOkuma <= esikDegerSag && solOkuma <= esikDegerSol) {
+    sol();
+  } else {
+    // Belirli bir şeridi izlemediğimiz durumlar için buraya eklemeler yapabilirsiniz.
+    // Örneğin, geri gitmek gibi durumlar ekleyebilirsiniz.
+    dur();
   }
-  else
-    Serial.println("Sol sensör çizgiyi algılamadı!");
-  
-  // Sağ sensör değeri eşik değerinden küçükse, çizgiyi algıladı
-  if (sagOkuma > esikDegeriSag) {
-    Serial.println("Sağ sensör çizgiyi algıladı!");
-  }
-  else
-    Serial.println("Sağ sensör çizgiyi algılamadı!");
-  
-  // Biraz gecikme ekleyebilirsiniz, örneğin:
-  delay(100); // 100 milisaniye bekleyin
+}
+
+void ileri() {
+  digitalWrite(pinler[3], 1);
+  digitalWrite(pinler[2], 0);
+  digitalWrite(pinler[1], 1);
+  digitalWrite(pinler[0], 0);
+}
+
+void geri() {
+  digitalWrite(pinler[3], 0);
+  digitalWrite(pinler[2], 1);
+  digitalWrite(pinler[1], 0);
+  digitalWrite(pinler[0], 1);
+}
+
+void sag() {
+  digitalWrite(pinler[3], 0);
+  digitalWrite(pinler[2], 1);
+  digitalWrite(pinler[1], 0);
+  digitalWrite(pinler[0], 0);
+}
+
+void sol() {
+  digitalWrite(pinler[3], 0);
+  digitalWrite(pinler[2], 0);
+  digitalWrite(pinler[1], 0);
+  digitalWrite(pinler[0], 1);
+}
+
+void dur() {
+  digitalWrite(pinler[3], 0);
+  digitalWrite(pinler[2], 0);
+  digitalWrite(pinler[1], 0);
+  digitalWrite(pinler[0], 0);
 }
