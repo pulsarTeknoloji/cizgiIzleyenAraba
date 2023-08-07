@@ -11,12 +11,6 @@ const int leftForward= D6;
 const int leftBackward = D7;
 
 
-//
-bool solsensordeger;
-bool sagsensordeger;
-bool ortasensordeger;
-
-
 
 
 
@@ -41,14 +35,44 @@ void loop() {
 bool Sensor2 = LineDetect.ReadlineFollowerDigital2();
 bool Sensor1 = LineDetect.ReadLineFollowerDigital1();
 
-if (Sensor1 == 1 && Sensor2 == 1 && ortasensordeger == 0){
-ortasensordeger == 1;
-}
-else if  (Sensor1 == 0 && Sensor2 == 0 && ortasensordeger == 1 ){
-  ortasensordeger == 0
-}
-else if (Sensor1 == 1 && Sensor2 == 0 && sagsensordeger == 0)
-
+if (Sensor1 == 1 && Sensor2 == 1){
+  ileri();
 
 }
 
+else if (Sensor1 == 1 && Sensor2 == 0){
+  Sol();
+}
+
+else if (Sensor1 == 0 && Sensor2 == 1){
+  sag();
+}
+
+else if(Sensor1 == 0 && Sensor2 == 0){
+  dur();
+}
+
+/*
+-Yukarıda yazdığım kodun ayarlanabilir değerlisi, eğerki yine boolean değerler ihtiyacım olursa bool değişkenler atayıp onları 
+bu değerlere göre 0 ve 1 değerlerine atayacağım-
+
+
+uint16_t Sensor1Deger = LineDetect.ReadLineFollowerAnalog1();
+uint16_t Sensor2Deger = LineDetect.ReadLineFollowerAnalog2();
+
+if(Sensor1Deger > 3500 && Sensor2Deger < 3000){
+  sol();
+}
+
+else if (Sensor1Deger > 3500 && Sensor2Deger > 3500){
+  ileri();
+}
+
+else if(Sensor1Deger < 3500 && Sensor2Deger > 3500){
+  sag();
+}
+else if(Sensor1Deger < 3500 && Sensor2Deger < 3500){
+  dur();
+}
+
+*/
